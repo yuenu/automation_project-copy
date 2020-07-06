@@ -18,7 +18,7 @@ class PortalLoginTest(unittest.TestCase):
         options = webdriver.ChromeOptions()
         options.add_argument('--ignore-certificate-errors')
         options.add_argument('--ignore-ssl-errors')
-        url = 'http://www.fnjtd.com/'
+        url = 'http://www.rfben.com/'
         driver = webdriver.Chrome(chrome_options=options)
         driver.set_window_size(1080, 800)
         driver.get(url)
@@ -87,13 +87,15 @@ class PortalLoginTest(unittest.TestCase):
         # self.user.WithdrawApplication()
 
         # 彩票 - 確認ok 0622test
-        # self.game.goIGlottery()
+        # self.game.goIGlottery()  #封盤判斷還要再做
         # self.game.goSYlottery()
         # self.game.goGPKlotteryvideo()
         # self.game.goGPKlottery()
         # self.game.goGPK2lottery()
         # self.game.goLXlottery()
-        # self.game.goGPK3lottery()  # 維修,應該已經不合作
+        # self.game.go168lottery()
+        # self.game.goLLlottery()
+
 
         # 體育(串關定位要研究) 0622test
         # self.game.goSABAsport()
@@ -125,28 +127,30 @@ class PortalLoginTest(unittest.TestCase):
         # self.game.goAEelgame()
         # self.game.goSWelgame()
         # self.game.goSYelgame()
-        # self.game.goPTelgame()
+        # self.game.goPTelgame() #
         # self.game.goSGelgame()
         # self.game.goPPelgame()
         # self.game.goICGelgame()
         # self.game.goBSPelgame()
         # self.game.goGPKelgame()
         # self.game.goJDBelgame()
+        # self.game.goJDBelgame()
         # self.game.goHBelgame()
         # self.game.goDTelgame()
-        # self.game.goPGelgame()
-        # #
+        # self.game.goPGelgame()  #PG, PG2不同
+        # self.game.goGPK2elgame()
+        # self.game.goPNGelgame()
         # self.game.goKAelgame()
         # self.game.goGHelgame()
         # self.game.goR8elgame()
-        # self.game.goPNGelgame()
+
+
         # self.game.goJSelgame()
-        # self.game.goGPK2elgame()
         # self.game.goMTelgame()  # 改掛VPN
         # self.game.goFGargame()  # FG街機維修很久了
 
         # 捕魚 - 確認ok 0624test
-        self.game.goKAfish()
+        # self.game.goKAfish()
         # self.game.goICGfish()
         # self.game.goAPfish()
         # self.game.goFGfish()
