@@ -92,7 +92,6 @@ class PortalLoginTest(unittest.TestCase):
         # self.game.goGPKlotteryvideo()
         # self.game.goGPKlottery()
         # self.game.goGPK2lottery()
-        # self.game.goLXlottery()
         # self.game.go168lottery()
         # self.game.goLLlottery()
 
@@ -102,8 +101,8 @@ class PortalLoginTest(unittest.TestCase):
         # self.game.goIMsport()
         # self.game.goESBsport()
         # self.game.go3singsport() #
-        # self.game.goBBINsport() #
-        # self.game.goCRsport()  # 有時候單沒送出
+        # self.game.goBBINsport()
+        # self.game.goCRsport()
 
         # 牌類 0622test
         # self.game.goJDBboard()
@@ -127,7 +126,7 @@ class PortalLoginTest(unittest.TestCase):
         # self.game.goAEelgame()
         # self.game.goSWelgame()
         # self.game.goSYelgame()
-        # self.game.goPTelgame() #
+        # self.game.goPTelgame()
         # self.game.goSGelgame()
         # self.game.goPPelgame()
         # self.game.goICGelgame()

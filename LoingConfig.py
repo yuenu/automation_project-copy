@@ -677,28 +677,23 @@ class GameHall(PortalLoginConfig):
         time.sleep(6)
         self.switch_window()
         self.switch_iframe()
-        if len(self.driver.find_elements_by_css_selector('[title="金猪报财"]')) !=0:
-            self.driver.find_element_by_css_selector('[title="金猪报财"]').click()
-        else :
-            self.driver.find_element_by_css_selector('[ng-click="changePage(page.index+1)"]').click()
-            time.sleep(2)
-            self.driver.find_element_by_css_selector('[title="金猪报财"]').click()
+        if self.url == 'http://www.rfben.com/':
+            self.driver.find_element_by_css_selector('[title="麻将胡了"]').click()
+        else:
+            self.driver.find_element_by_css_selector('[title="赏金船长"]').click()
         time.sleep(12)
-        self.detect_maintain()
         self.switch_window()
         self.switch_iframe()
         canvas = self.driver.find_element_by_id('Cocos2dGameContainer')
         ActionChains(self.driver).move_to_element_with_offset(canvas, 640, 660).click().perform()  # 開始
         time.sleep(2)
-        ActionChains(self.driver).move_by_offset(90, 90).click().perform()  # "減碼按鈕"
+        ActionChains(self.driver).move_by_offset(-110, 90).click().perform()  # "減碼按鈕"
         time.sleep(1)
-        ActionChains(self.driver).move_by_offset(100, -270).click().perform()
-        for j in range(15):
+        for j in range(10):
             ActionChains(self.driver).move_by_offset(0, 0).click().perform()
-            time.sleep(0.7)
-        ActionChains(self.driver).move_by_offset(-130, 290).click().perform()
-        time.sleep(1)
-        ActionChains(self.driver).move_by_offset(-70, 0).click().perform()  # "轉動按鈕"
+        ActionChains(self.driver).move_by_offset(100, 0).click().perform()
+        time.sleep(5)
+        ActionChains(self.driver).move_by_offset(0, 0).click().perform()  # "轉動按鈕"
         time.sleep(8)
         self.close_window_buffer()
 
@@ -969,7 +964,7 @@ class GameHall(PortalLoginConfig):
                     print('目前PT電子沒有熊之舞')
             except:
                 pass
-        time.sleep(14)
+        time.sleep(20)
         self.switch_window()
         for x in range(5):
             if len(self.driver.find_elements_by_css_selector('#messageBoxButtonYes')) == 1:
@@ -1583,6 +1578,7 @@ class GameHall(PortalLoginConfig):
             time.sleep(6)
             self.close_window_buffer()
 
+    # 不合作
     def goLXlottery(self):
         lobby_lottery = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[7]/a')  # "彩票游戏"下拉式選單
         lx_lottery = self.driver.find_element_by_css_selector('[ng-click="toLxLottery()"]')  # LX利鑫彩票
@@ -1607,20 +1603,25 @@ class GameHall(PortalLoginConfig):
         ActionChains(self.driver).move_to_element(lobby_lottery).click(_168_lottery).perform()
         time.sleep(13)
         self.switch_window()
-        closed1 = self.driver.find_element_by_css_selector('#show_time1').text
-        closed2 = self.driver.find_element_by_css_selector('#show_time2').text
-        if closed1 == '封盘中':
-            self.driver.find_elements_by_css_selector('.item.bg-primary')[1].click()
-        elif (closed1 == closed2) == '封盘中':
-            self.driver.find_elements_by_css_selector('.item.bg-primary')[2].click()
-        else:
-            self.driver.find_elements_by_css_selector('.item.bg-primary')[0].click()
-        time.sleep(3)
-        self.driver.find_elements_by_css_selector('.bet-item')[0].click()
-        time.sleep(2)
-        self.driver.find_element_by_css_selector('[value="投注"]').click()
-        time.sleep(2)
-        self.driver.find_elements_by_css_selector('.bet-btn')[1].click()
+        try:
+            closed1 = self.driver.find_element_by_css_selector('#show_time1').text
+            closed2 = self.driver.find_element_by_css_selector('#show_time2').text
+            if closed1 == '封盘中':
+                self.driver.find_elements_by_css_selector('.item.bg-primary')[1].click()
+            elif (closed1 == closed2) == '封盘中':
+                self.driver.find_elements_by_css_selector('.item.bg-primary')[2].click()
+            else:
+                self.driver.find_elements_by_css_selector('.item.bg-primary')[0].click()
+            time.sleep(3)
+            self.driver.find_elements_by_css_selector('.bet-item')[0].click()
+            time.sleep(2)
+            self.driver.find_element_by_css_selector('[value="投注"]').click()
+            time.sleep(2)
+            self.driver.find_elements_by_css_selector('.bet-btn')[1].click()
+        except NoSuchElementException:
+            maintain = self.driver.find_element_by_css_selector('.maintain').text
+            if '系统维护中' in maintain:
+                print(maintain)
         time.sleep(6)
         self.close_window_buffer()
 
@@ -1640,7 +1641,7 @@ class GameHall(PortalLoginConfig):
         self.driver.find_elements_by_css_selector('.gametypes-menu-quwei')[0].click()  # 趣味
         time.sleep(3)
         self.driver.find_elements_by_css_selector('[data-param="action=ball&value=0&row=0"]')[1].click()  # 0
-        time.sleep(1)
+        time.sleep(2)
         self.driver.find_element_by_css_selector('#J-fast-submit').click()  # 立即投注
         time.sleep(2)
         self.driver.find_element_by_css_selector('.j-ui-miniwindow.pop.pop.w-auto .pop-control .btn.confirm').click()  # 确 认
@@ -1733,6 +1734,9 @@ class GameHall(PortalLoginConfig):
         self.driver.switch_to.default_content()
         frame2 = self.driver.find_element_by_css_selector('#body')
         self.driver.switch_to.frame(frame2)
+        time.sleep(1)
+        self.driver.find_elements_by_css_selector('#showDateSel span')[1].click()
+        time.sleep(3)
         for i in range(0, 9, 2):
             self.driver.find_elements_by_css_selector('tbody.tr_content td:nth-child(4) div span span a')[i].click()
             time.sleep(1)
@@ -1842,13 +1846,19 @@ class GameHall(PortalLoginConfig):
         lobby_sport = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[6]/a')  # "体育赛事"下拉式選單
         bbin_sport = self.driver.find_element_by_css_selector('[ng-click="toBbSport()"]')  # BBIN体育
         ActionChains(self.driver).move_to_element(lobby_sport).click(bbin_sport).perform()
-        time.sleep(12)
+        time.sleep(16)
         self.switch_window()
         self.switch_iframe()
         self.switch_iframe()
         time.sleep(1)
-        self.driver.find_element_by_css_selector('[data-period="PC"]').click()  # '過關'
-        time.sleep(5)
+        self.driver.find_element_by_css_selector('[data-period="PC"]').click()  # '过关'
+        time.sleep(4)
+        self.driver.find_element_by_css_selector('#js-date').click()  # 日期
+        time.sleep(1)
+        self.driver.find_elements_by_css_selector('.date-choose-block')[1].click()  # 隔天日期
+        time.sleep(1)
+        self.driver.find_elements_by_css_selector('.js-assign-submit.btn.confirm-btn')[1].click()  # 送出
+        time.sleep(2)
         for i in range(0, 10, 2):
             self.driver.find_elements_by_css_selector('.table-normal .js-fadetoggle-content tr td:nth-child(3)')[int(f'{i}')].click()
             time.sleep(0.5)
