@@ -13,11 +13,11 @@ class PortalLoginTest(unittest.TestCase):
 
     def test_captch_pass(self):
         self.login.isAnnuncement()
-        self.login.sendUserInfo(self.login.account, self.login.password)
-        self.login.parsingPageSourceAndSaveImage(self.login.filepath)
+        self.login.send_user_info(self.login.account, self.login.password)
+        self.login.parsingPageSourceAndSaveImage(self.login.file_path)
         self.login.sendCaptchCode()
-        self.login.clickLoginIn()
-        self.login.loginFail()
+        self.login.click_loginIn()
+        self.login.login_failed()
         time.sleep(5)
         self.login.goGPKfish()
         pyautogui.PAUSE = 8

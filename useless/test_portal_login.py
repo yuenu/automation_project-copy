@@ -12,11 +12,11 @@ class PortalLoginTest(unittest.TestCase):
     def test_captch_pass(self):
         for i in range(100):
             self.login.isAnnuncement()
-            self.login.sendUserInfo(self.login.account, self.login.password)
-            self.login.parsingPageSourceAndSaveImageSendCode(self.login.filepath)
+            self.login.send_user_info(self.login.account, self.login.password)
+            self.login.parsing_page_source_and_save_image_send_code(self.login.file_path)
 
-            self.login.clickLoginIn()
-            self.login.loginFail()
+            self.login.click_loginIn()
+            self.login.login_failed()
             self.login.logout()
             print(f'Complete {i+1} times test!')
 

@@ -2,23 +2,22 @@ import unittest
 import time
 import random
 from selenium import webdriver
-from LoingConfig import PortalLoginConfig, GameHall, UserSimulation ,entergmae
+from LoingConfig import PortalLoginConfig, GameHall, UserSimulation, entergmae
 from functionlist import usersimulation_list, game_list, entergame_list, member
 
 
 class PortalLoginTest(unittest.TestCase):
 
     def setUp(self):
+        AB005 = 'http://www.fnjtd.com/'
+        AB006 = 'http://www.rfben.com/'
+        AB007 = 'http://www.jp777.net/'
 
-        """
-        AB005 - http://www.fnjtd.com/
-        AB006 - http://www.rfben.com/
-        AB007 - http://www.jp777.net/
-        """
+        url = AB005
+
         options = webdriver.ChromeOptions()
         options.add_argument('--ignore-certificate-errors')
         options.add_argument('--ignore-ssl-errors')
-        url = 'http://www.rfben.com/'
         driver = webdriver.Chrome(chrome_options=options)
         driver.set_window_size(1080, 800)
         driver.get(url)
@@ -27,16 +26,14 @@ class PortalLoginTest(unittest.TestCase):
         self.game = GameHall(driver, url)
         self.user = UserSimulation(driver, url)
         self.entergame = entergmae(driver, url)
-        self.filepath = f'./recaptcha/captcha.png'
+        self.file_path = f'./recaptcha/captcha.png'
         self.password = 'a654321'
-
 
     def tearDown(self):
         self.portal.driver.close()
         self.portal.driver.quit()
 
-    def getUserSimulation(self):
-
+    def get_user_simulation(self):
         """
         Portal端使用者模擬做取2~3個
         玩遊戲下注取1~2個
@@ -65,7 +62,7 @@ class PortalLoginTest(unittest.TestCase):
         # for index in range(len(member)):
         #     member_now = member.pop(0)
         #     print(member_now)
-        #     self.portal.isAnnuncement()
+        #     self.portal.check_has_announcement()
         #     self.portal.sendUserInfo(member_now, self.password)
         #     self.portal.parsingPageSourceAndSaveImageSendCode()
         #     self.portal.clickLoginIn()
@@ -93,16 +90,16 @@ class PortalLoginTest(unittest.TestCase):
         # self.game.goGPKlottery()
         # self.game.goGPK2lottery()
         # self.game.go168lottery()
-        # self.game.goLLlottery()
-
+        # self.game.goLLlottery() #待修
 
         # 體育(串關定位要研究) 0622test
         # self.game.goSABAsport()
         # self.game.goIMsport()
         # self.game.goESBsport()
-        # self.game.go3singsport() #
-        # self.game.goBBINsport()
+        # self.game.go3singsport()
         # self.game.goCRsport()
+        # self.game.goBBINsport()
+
 
         # 牌類 0622test
         # self.game.goJDBboard()
@@ -123,28 +120,28 @@ class PortalLoginTest(unittest.TestCase):
         # 05.06.07都可以
 
         # self.game.goTOGelgame()
-        # self.game.goAEelgame()
         # self.game.goSWelgame()
+        # self.game.goAEelgame()
         # self.game.goSYelgame()
         # self.game.goPTelgame()
         # self.game.goSGelgame()
         # self.game.goPPelgame()
-        # self.game.goICGelgame()
-        # self.game.goBSPelgame()
-        # self.game.goGPKelgame()
-        # self.game.goJDBelgame()
-        # self.game.goJDBelgame()
-        # self.game.goHBelgame()
-        # self.game.goDTelgame()
-        # self.game.goPGelgame()  #PG, PG2不同
-        # self.game.goGPK2elgame()
-        # self.game.goPNGelgame()
-        # self.game.goKAelgame()
-        # self.game.goGHelgame()
-        # self.game.goR8elgame()
+        self.game.goICGelgame()
+        self.game.goBSPelgame()
+        self.game.goGPKelgame()
+        self.game.goJDBelgame()
+        self.game.goHBelgame()
+        self.game.goDTelgame()
+        self.game.goPNGelgame()
+        self.game.goPGelgame()  #PG, PG2不同
+        self.game.goGPK2elgame()
+        self.game.goKAelgame()
+        self.game.goMWelgame()
+        self.game.goJSelgame()
 
+        self.game.goGHelgame()  # 06換遊戲了
+        self.game.goR8elgame()  # 06換遊戲了
 
-        # self.game.goJSelgame()
         # self.game.goMTelgame()  # 改掛VPN
         # self.game.goFGargame()  # FG街機維修很久了
 
@@ -156,22 +153,20 @@ class PortalLoginTest(unittest.TestCase):
         # self.game.goJDBfish()
         # self.game.goLEGfish()
         # self.game.goVGfish()
-        # self.game.goMWfish()
         # self.game.goGPK2fish()
         # self.game.goFGbird()
         # self.game.goGPKfish()
         # self.game.goBSPfish()
-        # self.game.goTHfish()
+        self.game.goMWfish()
 
         # self.game.goBBINfish()  # 待修 要兌換分數 麻煩
 
-        # self.game.go07ICGfish()
-        # self.game.go07KAfish()
-        # self.game.go07BSPfish()
-        #須掛VPN
+        # 須掛VPN
         # self.game.goBGfish()
         # self.game.goCQ9fish()
         # self.game.goMTfish() # 改成需跨區
+        # self.game.goTHfish()  # 改成跨區
+
 
 if __name__ == "__main__":
     unittest.main()
