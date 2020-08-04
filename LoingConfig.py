@@ -1,3 +1,4 @@
+import sys
 import time
 import base64
 import pytesseract
@@ -170,7 +171,8 @@ class PortalLoginConfig(object):
         time.sleep(2)
 
     def detect_maintain(self):
-        time.sleep(3)
+        self.switch_window()
+        time.sleep(5)
         try:
             maintain = self.driver.find_element_by_css_selector('.maintain').text
             if '系统维护中' in maintain:
@@ -178,7 +180,23 @@ class PortalLoginConfig(object):
                 return True
             time.sleep(3)
             self.close_window_buffer()
-        except:
+        except Exception as e:
+            exc_type, exc_value, exc_traceback_obj = sys.exc_info()
+            if exc_type is NoSuchElementException:
+                try:
+                    self.switch_iframe()
+                    time.sleep(2)
+                    maintain = self.driver.find_element_by_css_selector('.maintain').text
+                    if '系统维护中' in maintain:
+                        print(maintain)
+                        return True
+                    time.sleep(3)
+                    self.close_window_buffer()
+                except:
+                    return False
+            else:
+                return False
+        else:
             return False
 
     def into_game_lobby_setting(self, game_name):
@@ -212,7 +230,7 @@ class PortalLoginConfig(object):
                     except:
                         pass
         except:
-            pass
+            print('目前此娛樂廳未開啟所設定之遊戲')
 
 class GameHall(PortalLoginConfig):
 
@@ -277,23 +295,19 @@ class GameHall(PortalLoginConfig):
 
     def goGPKfish(self):
         lobby_fish = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[3]/a')  # "捕鱼游戏"下拉式選單
-        gpk_fish = self.driver.find_element_by_css_selector('[game-box="gpk-monopoly"]')  # GPK捕鱼大富翁
+        gpk_fish = self.driver.find_element_by_css_selector('[game-box="gpk-king"]')  # GPK捕鱼大富翁
         ActionChains(self.driver).move_to_element(lobby_fish).click(gpk_fish).perform()
-        time.sleep(14)
-        self.switch_window()
-        time.sleep(1)
-        try:
+        check_is_maintain = self.detect_maintain()
+        if not check_is_maintain:
+            time.sleep(14)
+            self.switch_window()
+            time.sleep(1)
             canvas = self.driver.find_element_by_id('layaCanvas')
-            ActionChains(self.driver).move_to_element_with_offset(canvas, 250, 400).click().perform()  # 點擊0.1元炮場
+            ActionChains(self.driver).move_to_element_with_offset(canvas, 600, 300).click().perform()  # 點擊0.1元炮場
             time.sleep(12)
             for j in range(3):
                 ActionChains(self.driver).move_by_offset(0, 0).click().perform()  # 發炮
-            time.sleep(8)
-        except:
-            maintain = self.driver.find_element_by_css_selector('.maintain').text
-            if '系统维护中' in maintain:
-                print(maintain)
-            time.sleep(2)
+        time.sleep(8)
         self.close_window_buffer()
 
     def goGPK2fish(self):
@@ -301,10 +315,11 @@ class GameHall(PortalLoginConfig):
             lobby_fish = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[3]/a')  # "捕鱼游戏"下拉式選單
             gpk2_fish = self.driver.find_element_by_css_selector('[ng-click="toGpk2Fish()"]')  # GPK2大圣降魔
             ActionChains(self.driver).move_to_element(lobby_fish).click(gpk2_fish).perform()
-            time.sleep(16)
-            self.switch_window()
-            time.sleep(1)
-            try:
+            check_is_maintain = self.detect_maintain()
+            if not check_is_maintain:
+                time.sleep(22)
+                self.switch_window()
+                time.sleep(1)
                 canvas = self.driver.find_element_by_id('gamec')
                 ActionChains(self.driver).move_to_element_with_offset(canvas, 1000, 720).click().perform()  # 確認玩家身分
                 time.sleep(2)
@@ -315,11 +330,6 @@ class GameHall(PortalLoginConfig):
                 for j in range(50):
                     ActionChains(self.driver).move_by_offset(0, 0).click().perform()  # 發炮
                 time.sleep(6)
-            except:
-                maintain = self.driver.find_element_by_css_selector('.maintain').text
-                if '系统维护中' in maintain:
-                    print(maintain)
-                time.sleep(2)
             self.close_window_buffer()
         else:
             print('AB007沒有GPK2捕魚')
@@ -359,15 +369,17 @@ class GameHall(PortalLoginConfig):
         lobby_fish = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[3]/a')  # "捕鱼游戏"下拉式選單
         leg_fish = self.driver.find_element_by_css_selector('[game-box="leg-fish"]')  # LEG捕鱼大作战
         ActionChains(self.driver).move_to_element(lobby_fish).click(leg_fish).perform()
-        time.sleep(14)
-        self.switch_window()
-        time.sleep(2)
-        canvas = self.driver.find_element_by_id('StageDelegateDiv')
-        ActionChains(self.driver).move_to_element_with_offset(canvas, 250, 400).click().perform()  # 點擊0.1元炮場
-        time.sleep(5)
-        ActionChains(self.driver).move_by_offset(975, 215).click().perform()  # 自動射擊
-        time.sleep(2)
-        ActionChains(self.driver).move_by_offset(0, 0).click().perform()
+        check_is_maintain = self.detect_maintain()
+        if not check_is_maintain:
+            time.sleep(14)
+            self.switch_window()
+            time.sleep(2)
+            canvas = self.driver.find_element_by_id('StageDelegateDiv')
+            ActionChains(self.driver).move_to_element_with_offset(canvas, 250, 400).click().perform()  # 點擊0.1元炮場
+            time.sleep(5)
+            ActionChains(self.driver).move_by_offset(975, 215).click().perform()  # 自動射擊
+            time.sleep(2)
+            ActionChains(self.driver).move_by_offset(0, 0).click().perform()
         time.sleep(5)
         self.close_window_buffer()
 
@@ -411,7 +423,6 @@ class GameHall(PortalLoginConfig):
         lobby_fish = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[3]/a')  # "捕鱼游戏"下拉式選單
         vg_fish = self.driver.find_element_by_css_selector('[game-box="vg-fish"]')  # VG龙王捕鱼
         ActionChains(self.driver).move_to_element(lobby_fish).click(vg_fish).perform()
-        self.switch_window()
         check_is_maintain = self.detect_maintain()
         if not check_is_maintain:
             time.sleep(13)
@@ -447,14 +458,14 @@ class GameHall(PortalLoginConfig):
             ActionChains(self.driver).move_to_element(lobby_fish).click(fish).perform()
         time.sleep(12)
         self.switch_window()
-        self.detect_maintain()
+        self.switch_iframe()
         time.sleep(2)
-        canvas = self.driver.find_element_by_css_selector('.home')
+        canvas = self.driver.find_element_by_css_selector('#layaContainer')
         ActionChains(self.driver).move_to_element_with_offset(canvas, 1100, 150).click().perform()  # 'x'
         time.sleep(1)
         ActionChains(self.driver).move_by_offset(-800, 250).click().perform()  # 點擊0.1元炮場
         time.sleep(10)
-        ActionChains(self.driver).move_by_offset(290, 415).click().perform()  # 點擊自動
+        ActionChains(self.driver).move_by_offset(290, 400).click().perform()  # 點擊自動
         time.sleep(2)
         ActionChains(self.driver).move_by_offset(0, 0).click().perform()
         time.sleep(5)
@@ -619,20 +630,22 @@ class GameHall(PortalLoginConfig):
             self.into_game_lobby_setting('麻将胡了')
         else:
             self.into_game_lobby_setting('赏金船长')
-        time.sleep(14)
-        self.switch_window()
-        self.switch_iframe()
-        canvas = self.driver.find_element_by_id('Cocos2dGameContainer')
-        ActionChains(self.driver).move_to_element_with_offset(canvas, 640, 660).click().perform()  # 開始
-        time.sleep(2)
-        ActionChains(self.driver).move_by_offset(-110, 90).click().perform()  # "減碼按鈕"
-        time.sleep(1)
-        for j in range(10):
-            ActionChains(self.driver).move_by_offset(0, 0).click().perform()
-        ActionChains(self.driver).move_by_offset(100, 0).click().perform()
-        time.sleep(5)
-        ActionChains(self.driver).move_by_offset(0, 0).click().perform()  # "轉動按鈕"
-        time.sleep(8)
+        check_is_maintain = self.detect_maintain()
+        if not check_is_maintain:
+            time.sleep(14)
+            self.switch_window()
+            self.switch_iframe()
+            canvas = self.driver.find_element_by_id('Cocos2dGameContainer')
+            ActionChains(self.driver).move_to_element_with_offset(canvas, 640, 660).click().perform()  # 開始
+            time.sleep(2)
+            ActionChains(self.driver).move_by_offset(-110, 90).click().perform()  # "減碼按鈕"
+            time.sleep(1)
+            for j in range(10):
+                ActionChains(self.driver).move_by_offset(0, 0).click().perform()
+            ActionChains(self.driver).move_by_offset(100, 0).click().perform()
+            time.sleep(5)
+            ActionChains(self.driver).move_by_offset(0, 0).click().perform()  # "轉動按鈕"
+            time.sleep(8)
         self.close_window_buffer()
 
     def goSGelgame(self):
@@ -640,11 +653,6 @@ class GameHall(PortalLoginConfig):
         sg_elgame = self.driver.find_element_by_css_selector('[ng-click="toSgFlash()"]')  # SG电子游艺
         ActionChains(self.driver).move_to_element(lobby_elgame).click(sg_elgame).perform()
         self.into_game_lobby_setting('金鸡')
-        # time.sleep(5)
-        # self.switch_window()
-        # self.switch_iframe()
-        # time.sleep(1)
-        # self.driver.find_element_by_css_selector('[title="金鸡"]').click()
         time.sleep(12)
         self.switch_window()
         time.sleep(1)
@@ -666,19 +674,6 @@ class GameHall(PortalLoginConfig):
         sw_elgame = self.driver.find_element_by_css_selector('[ng-click="toPtsHtml()"]')  # 天风电子游艺
         ActionChains(self.driver).move_to_element(lobby_elgame).click(sw_elgame).perform()
         self.into_game_lobby_setting('天上凤凰')
-        # # time.sleep(6)
-        # self.switch_window()
-        # self.switch_iframe()
-        # game_name = self.into_lobby_wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[title="天上凤凰"]')))
-        # # self.driver.execute_script("arguments[0].click();", game_name)
-        # if len(self.driver.find_elements_by_css_selector('[title="天上凤凰"]')) != 0:
-        #     self.driver.execute_script("arguments[0].click();", game_name)
-        # elif len(self.driver.find_elements_by_css_selector('[title="天上凤凰"]')) == 0:
-        #     self.driver.find_element_by_css_selector('[ng-click="changePage(page.index+1)"]').click()
-        #     time.sleep(2)
-        #     self.driver.execute_script("arguments[0].click();", game_name)
-        # else:
-        #     pass
         time.sleep(16)
         self.switch_window()
         self.switch_iframe()
@@ -700,20 +695,6 @@ class GameHall(PortalLoginConfig):
         DT_elgame = self.driver.find_element_by_css_selector('[ng-click="toDtHtml()"]')  # DT梦想电子游艺
         ActionChains(self.driver).move_to_element(lobby_elgame).click(DT_elgame).perform()
         self.into_game_lobby_setting('赛亚烈战')
-        # time.sleep(8)
-        # self.switch_window()
-        # self.switch_iframe()
-        # pagenum = self.driver.find_element_by_css_selector('[ng-bind="page.total"]').text
-        # for x in range(int(pagenum)):
-        #     try:
-        #         if len(self.driver.find_elements_by_css_selector('[title="赛亚烈战"]')) != 0:
-        #             self.driver.find_element_by_css_selector('[title="赛亚烈战"]').click()
-        #         else:
-        #             self.driver.find_element_by_css_selector('[ng-click="changePage(page.index+1)"]').click()
-        #             time.sleep(1)
-        #             self.driver.find_element_by_css_selector('[title="赛亚烈战"]').click()
-        #     except:
-        #         pass
         time.sleep(18)
         self.switch_window()
         self.switch_iframe()
@@ -782,21 +763,6 @@ class GameHall(PortalLoginConfig):
         GPK_elgame = self.driver.find_element_by_css_selector('[ng-click="toGpkSlot()"]')  # GPK电子游艺
         ActionChains(self.driver).move_to_element(lobby_elgame).click(GPK_elgame).perform()
         self.into_game_lobby_setting('秦皇传说')
-        # time.sleep(5)
-        # self.switch_window()
-        # self.switch_iframe()
-        # time.sleep(1)
-        # pagenum = self.driver.find_element_by_css_selector('[ng-bind="page.total"]').text
-        # for x in range(int(pagenum)):
-        #     try:
-        #         if len(self.driver.find_elements_by_css_selector('[title="秦皇传说"]')) != 0:
-        #             self.driver.find_element_by_css_selector('[title="秦皇传说"]').click()  # 秦皇传说
-        #         else:
-        #             self.driver.find_element_by_css_selector('[ng-click="changePage(page.index+1)"]').click()
-        #             time.sleep(1)
-        #             self.driver.find_element_by_css_selector('[title="秦皇传说"]').click()
-        #     except:
-        #         pass
         check_is_maintain = self.detect_maintain()
         if not check_is_maintain:
             time.sleep(18)
@@ -804,11 +770,11 @@ class GameHall(PortalLoginConfig):
             self.switch_iframe()
             canvas = self.driver.find_element_by_id('GameCanvas')
             ActionChains(self.driver).move_to_element_with_offset(canvas, 1140, 120).click().perform()  # 'x'
-            time.sleep(2)
+            time.sleep(1)
             ActionChains(self.driver).move_by_offset(0, 0).click().perform()  # 'x'
-            time.sleep(2)
+            time.sleep(1)
             ActionChains(self.driver).move_by_offset(0, 0).click().perform()  # 'x'
-            time.sleep(2)
+            time.sleep(1)
             ActionChains(self.driver).move_by_offset(-700, 560).click().perform()  # 押注
             time.sleep(1)
             ActionChains(self.driver).move_by_offset(150, -70).click().perform()  # 1
@@ -904,27 +870,9 @@ class GameHall(PortalLoginConfig):
         PT_elgame = self.driver.find_element_by_css_selector('[ng-click="toPtFlash()"]')  # PT电子游艺
         ActionChains(self.driver).move_to_element(lobby_elgame).click(PT_elgame).perform()
         self.into_game_lobby_setting('熊之舞')
-        # # time.sleep(5)
-        # self.switch_window()
-        # self.switch_iframe()
-        # time.sleep(1)
-        # game_name = self.into_lobby_wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[title="银行大劫案"]')))
-        # self.driver.execute_script("arguments[0].click();", game_name)
-        # pagenum = self.driver.find_element_by_css_selector('[ng-bind="page.total"]').text
-        # for x in range(int(pagenum)):
-        #     try:
-        #         if len(self.driver.find_elements_by_css_selector('[title="熊之舞"]')) != 0:
-        #             self.driver.find_element_by_css_selector('[title="熊之舞"]').click()
-        #         elif len(self.driver.find_elements_by_css_selector('[title="熊之舞"]')) == 0:
-        #             self.driver.find_element_by_css_selector('[ng-click="changePage(page.index+1)"]').click()
-        #             time.sleep(2)
-        #             self.driver.find_element_by_css_selector('[title="熊之舞"]').click()
-        #         else:
-        #             print('目前PT電子沒有熊之舞')
-        #     except:
-        #         pass
-        time.sleep(18)
+        time.sleep(14)
         self.switch_window()
+        self.switch_iframe()
         for x in range(7):
             if len(self.driver.find_elements_by_css_selector('#messageBoxButtonYes')) == 1:
                 messageBoxButton = self.driver.find_element_by_css_selector('#messageBoxButtonYes')
@@ -932,19 +880,17 @@ class GameHall(PortalLoginConfig):
                 time.sleep(1)
         self.switch_iframe()
         canvas = self.driver.find_element_by_id('ngm-uicore2-root')
-        ActionChains(self.driver).move_to_element_with_offset(canvas, 330, 700).click().perform()  # '確定'
+        ActionChains(self.driver).move_to_element_with_offset(canvas, 350, 750).click().perform()  # '確定'
         for i in range(10):
             ActionChains(self.driver).move_by_offset(0, 0).click().perform()
-        ActionChains(self.driver).move_by_offset(-130, 0).click().perform()  # '-'
+        ActionChains(self.driver).move_by_offset(-150, 0).click().perform()  # '-'
         for j in range(25):
             ActionChains(self.driver).move_by_offset(0, 0).click().perform()
-        ActionChains(self.driver).move_by_offset(800, 0).click().perform()  # '旋轉'
+        ActionChains(self.driver).move_by_offset(900, 0).click().perform()  # '旋轉'
         time.sleep(6)
         for k in range(2):
             ActionChains(self.driver).move_by_offset(0, 0).click().perform()
         time.sleep(6)
-        self.driver.close()
-        self.switch_window()
         self.close_window_buffer()
 
     '''卡在是否關掉聲音那關，用ActionChain沒有反應'''
@@ -952,32 +898,34 @@ class GameHall(PortalLoginConfig):
         lobby_elgame = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[5]/a')  # "电子游艺"下拉式選單
         FBG_elgame = self.driver.find_element_by_css_selector('[ng-click="toJv8Html()"]')  # FBG发宝电子游艺
         ActionChains(self.driver).move_to_element(lobby_elgame).click(FBG_elgame).perform()
+        self.into_game_lobby_setting('松鼠战士')
+        check_is_maintain = self.detect_maintain()
+        if not check_is_maintain:
+            time.sleep(12)
+            self.switch_window()
+            self.switch_iframe()
+            self.switch_iframe()
+            self.switch_iframe()
+            checkbox = self.driver.find_element_by_css_selector('.button--secondary')
+            self.driver.execute_script("arguments[0].click();", checkbox)
+            time.sleep(4)
+            self.driver.switch_to.default_content()
+            self.switch_iframe()
+            self.switch_iframe()
+            time.sleep(2)
+            try:
+                for i in range(15):
+                    self.driver.find_elements_by_css_selector('[data-auto="COIN_SELECTOR_DEC"]')[0].click()
+            except:
+                pass
+            try:
+                for i in range(25):
+                    self.driver.find_elements_by_css_selector('[data-auto="LINE_SELECTOR_DEC"]')[0].click()
+            except:
+                pass
+            time.sleep(1)
+            self.driver.find_elements_by_css_selector('[data-auto="AUTO_PLAY_AND_SPIN_BUTTON_PRIMARY"]')[0].click()
         time.sleep(6)
-        self.switch_window()
-        self.switch_iframe()
-        time.sleep(1)
-        self.driver.find_element_by_css_selector('[title="松鼠战士"]').click()
-        time.sleep(30)
-        self.switch_window()
-        self.switch_iframe()
-        self.switch_iframe()
-        self.switch_iframe()
-        checkbox = self.driver.find_element_by_css_selector('.button--secondary')
-        self.driver.execute_script("arguments[0].click();", checkbox)
-        time.sleep(3)
-        self.driver.switch_to.default_content()
-        self.switch_iframe()
-        self.switch_iframe()
-        canvas = self.driver.find_element_by_css_selector('button[data-auto="COIN_SELECTOR_DEC"]')
-        ActionChains(self.driver).move_to_element_with_offset(canvas, 385, 766).click().perform()  # '-'數
-        for i in range(6):
-            ActionChains(self.driver).move_by_offset(0, 0).click().perform()
-        ActionChains(self.driver).move_by_offset(-190, 0).click().perform()
-        for j in range(25):
-            ActionChains(self.driver).move_by_offset(0, 0).click().perform()
-        time.sleep(1)
-        ActionChains(self.driver).move_by_offset(850, 0).click().perform()  # 轉動開始
-        time.sleep(10)
         self.close_window_buffer()
 
     def goJDBelgame(self):
@@ -1014,11 +962,6 @@ class GameHall(PortalLoginConfig):
         HB_elgame = self.driver.find_element_by_css_selector('[ng-click="toHabaHtml()"]')  # HB电子游艺
         ActionChains(self.driver).move_to_element(lobby_elgame).click(HB_elgame).perform()
         self.into_game_lobby_setting('鲤鱼门')
-        # time.sleep(5)
-        # self.switch_window()
-        # self.switch_iframe()
-        # time.sleep(1)
-        # self.driver.find_element_by_css_selector('[title="鲤鱼门"]').click()
         time.sleep(12)
         self.switch_window()
         self.switch_iframe()
@@ -1160,21 +1103,14 @@ class GameHall(PortalLoginConfig):
         icg_elgame = self.driver.find_element_by_css_selector('[ng-click="toIcgHtml()"]')  # GPK电子游艺
         ActionChains(self.driver).move_to_element(lobby_elgame).click(icg_elgame).perform()
         self.into_game_lobby_setting('后羿射日')
-        # time.sleep(5)
-        # self.switch_window()
-        # self.switch_iframe()
-        # self.driver.find_element_by_css_selector('[title="后羿射日"]').click()
         time.sleep(12)
         self.switch_window()
         self.switch_iframe()
-        # self.switch_iframe()
+        self.switch_iframe()
         time.sleep(1)
         canvas = self.driver.find_element_by_css_selector('#GameCanvas')
         ActionChains(self.driver).move_to_element_with_offset(canvas, 1180, 400).click().perform()
-        time.sleep(3)
         time.sleep(8)
-        self.driver.close()
-        self.switch_window()
         self.close_window_buffer()
 
     def go07ICGelgame(self):
@@ -1214,8 +1150,9 @@ class GameHall(PortalLoginConfig):
             self.into_game_lobby_setting('鼠来宝')
         else:
             self.into_game_lobby_setting('幸运象神')
-        time.sleep(14)
+        time.sleep(18)
         self.switch_window()
+        self.switch_iframe()
         time.sleep(1)
         canvas = self.driver.find_element_by_css_selector('#gameCanvas')
         ActionChains(self.driver).move_to_element_with_offset(canvas, 40, 787).click().perform()
@@ -1228,8 +1165,6 @@ class GameHall(PortalLoginConfig):
         time.sleep(1)
         ActionChains(self.driver).move_by_offset(-90, 20).click().perform()  # 轉動
         time.sleep(8)
-        self.driver.close()
-        self.switch_window()
         self.close_window_buffer()
 
     def goPPelgame(self):
@@ -1267,19 +1202,14 @@ class GameHall(PortalLoginConfig):
         bsp_elgame = self.driver.find_element_by_css_selector('[ng-click="toBspHtml()"]')  # BSP百胜电子游艺
         ActionChains(self.driver).move_to_element(lobby_elgame).click(bsp_elgame).perform()
         self.into_game_lobby_setting('欧式轮盘')
-        # time.sleep(5)
-        # self.switch_window()
-        # self.switch_iframe()
-        # time.sleep(1)
-        # self.driver.find_element_by_css_selector('[title="欧式轮盘"]').click()
         check_is_maintain = self.detect_maintain()
         if not check_is_maintain:
             time.sleep(15)
-            self.switch_window()
-            self.switch_iframe()
-            if len(self.driver.find_elements_by_css_selector('.btn.btn-close.close-pop-message')) != 0:
-                self.driver.find_element_by_css_selector('.btn.btn-close.close-pop-message').click()  # Close announcement
-            time.sleep(4)
+            # self.switch_window()
+            # self.switch_iframe()
+            # if len(self.driver.find_elements_by_css_selector('.btn.btn-close.close-pop-message')) != 0:
+            #     self.driver.find_element_by_css_selector('.btn.btn-close.close-pop-message').click()  # Close announcement
+            # time.sleep(4)
             self.switch_window()
             self.switch_iframe()
             self.switch_iframe()
@@ -1300,7 +1230,6 @@ class GameHall(PortalLoginConfig):
         ActionChains(self.driver).move_to_element(lobby_elgame).click(mw_elgame).perform()
         if self.url == 'http://www.rfben.com/':
             self.into_game_lobby_setting('水浒传')
-            self.driver.find_element_by_css_selector('[title="水浒传"]').click()
             time.sleep(15)
             self.switch_window()
             self.switch_iframe()
@@ -1323,6 +1252,28 @@ class GameHall(PortalLoginConfig):
             time.sleep(3)
             ActionChains(self.driver).move_by_offset(0, 0).click().perform()
         time.sleep(6)
+        self.close_window_buffer()
+
+    def goRTelgame(self):
+        lobby_elgame = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[5]/a')  # "电子游艺"下拉式選單
+        rt_elgame = self.driver.find_element_by_css_selector('[ng-click="toRtHtml()"]')  # RT红虎电子游艺
+        ActionChains(self.driver).move_to_element(lobby_elgame).click(rt_elgame).perform()
+        self.into_game_lobby_setting('龙之谕MEGAWAYS™')
+        check_is_maintain = self.detect_maintain()
+        if not check_is_maintain:
+            time.sleep(12)
+            self.switch_window()
+            self.switch_iframe()
+            self.switch_iframe()
+            time.sleep(1)
+            canvas = self.driver.find_element_by_css_selector('.screen-attached-game')
+            ActionChains(self.driver).move_to_element_with_offset(canvas, 650, 700).click().perform()
+            time.sleep(6)
+            ActionChains(self.driver).move_by_offset(-500, 80).click().perform()
+            for i in range(5):
+                ActionChains(self.driver).move_by_offset(0, 0).click().perform()
+            ActionChains(self.driver).move_by_offset(950, 0).click().perform()
+        time.sleep(8)
         self.close_window_buffer()
 
     '''
@@ -1475,32 +1426,33 @@ class GameHall(PortalLoginConfig):
         lobby_lottery = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[7]/a')  # "彩票游戏"下拉式選單
         gpk2_lottery = self.driver.find_element_by_css_selector('[ng-click="toGpk2Lottery()"]')  # GPK2战游彩票
         ActionChains(self.driver).move_to_element(lobby_lottery).click(gpk2_lottery).perform()
-        time.sleep(10)
-        self.switch_window()
-        if self.url != 'http://www.rfben.com/':
-            self.switch_iframe()
-        time.sleep(1)
-        self.driver.find_elements_by_css_selector('.el-submenu')[0].click()  # 時時彩
-        time.sleep(2)
-        try:
-            self.driver.find_elements_by_css_selector('.el-menu-item')[1].click()
+        check_is_maintain = self.detect_maintain()
+        if not check_is_maintain:
+            time.sleep(10)
+            self.switch_window()
+            if self.url != 'http://www.rfben.com/':
+                self.switch_iframe()
             time.sleep(1)
-            self.driver.find_elements_by_css_selector('.bottom .btn')[2].click()  # 隨選
-            time.sleep(3)
-            self.driver.find_elements_by_css_selector('.bottom .btn')[1].click()  # 添加至購注區
+            self.driver.find_elements_by_css_selector('.el-submenu')[0].click()  # 時時彩
             time.sleep(2)
-            self.driver.find_element_by_css_selector('.submitBtnInner').click()
-        except:
-            self.driver.find_elements_by_css_selector('.el-menu-item')[2].click()
-            time.sleep(1)
-            self.driver.find_elements_by_css_selector('.bottom .btn')[2].click()  # 隨選
-            time.sleep(3)
-            self.driver.find_elements_by_css_selector('.bottom .btn')[1].click()  # 添加至購注區
-            time.sleep(2)
-            self.driver.find_element_by_css_selector('.submitBtnInner').click()
-        finally:
-            time.sleep(6)
-            self.close_window_buffer()
+            try:
+                self.driver.find_elements_by_css_selector('.el-menu-item')[1].click()
+                time.sleep(1)
+                self.driver.find_elements_by_css_selector('.bottom .btn')[2].click()  # 隨選
+                time.sleep(3)
+                self.driver.find_elements_by_css_selector('.bottom .btn')[1].click()  # 添加至購注區
+                time.sleep(2)
+                self.driver.find_element_by_css_selector('.submitBtnInner').click()
+            except:
+                self.driver.find_elements_by_css_selector('.el-menu-item')[2].click()
+                time.sleep(1)
+                self.driver.find_elements_by_css_selector('.bottom .btn')[2].click()  # 隨選
+                time.sleep(3)
+                self.driver.find_elements_by_css_selector('.bottom .btn')[1].click()  # 添加至購注區
+                time.sleep(2)
+                self.driver.find_element_by_css_selector('.submitBtnInner').click()
+        time.sleep(6)
+        self.close_window_buffer()
 
     def goGPK3lottery(self):
         lobby_lottery = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[7]/a')  # "彩票游戏"下拉式選單
@@ -1745,18 +1697,20 @@ class GameHall(PortalLoginConfig):
         lobby_sport = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[6]/a')  # "体育赛事"下拉式選單
         im_sport = self.driver.find_element_by_css_selector('[ng-click="toImsSport()"]')  # IM体育
         ActionChains(self.driver).move_to_element(lobby_sport).click(im_sport).perform()
-        time.sleep(12)
-        self.switch_window()
-        time.sleep(1)
-        self.driver.find_elements_by_css_selector('.tab_label')[2].click()
-        time.sleep(5)
-        for i in range(2, 9, 2):
-            self.driver.find_elements_by_css_selector(f'.event_listing:nth-child({i}) .row_normal:nth-child(1) .event_row:nth-child(1) .event_even:nth-child(3) div:nth-child(1) span')[0].click()
+        check_is_maintain = self.detect_maintain()
+        if not check_is_maintain:
+            time.sleep(12)
+            self.switch_window()
             time.sleep(1)
-        time.sleep(3)
-        self.driver.find_element_by_css_selector('.placebet_input').send_keys('5')
-        time.sleep(3)
-        self.driver.find_element_by_css_selector('.btn_placebet.btn').click()
+            self.driver.find_elements_by_css_selector('.tab_label')[2].click()
+            time.sleep(5)
+            for i in range(2, 9, 2):
+                self.driver.find_elements_by_css_selector(f'.event_listing:nth-child({i}) .row_normal:nth-child(1) .event_row:nth-child(1) .event_even:nth-child(3) div:nth-child(1) span')[0].click()
+                time.sleep(1)
+            time.sleep(3)
+            self.driver.find_element_by_css_selector('.placebet_input').send_keys('5')
+            time.sleep(3)
+            self.driver.find_element_by_css_selector('.btn_placebet.btn').click()
         time.sleep(8)
         self.close_window_buffer()
 
@@ -1764,37 +1718,40 @@ class GameHall(PortalLoginConfig):
         lobby_sport = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[6]/a')  # "体育赛事"下拉式選單
         esb_sport = self.driver.find_element_by_css_selector('[ng-click="toImSport()"]')  # ESB电竞
         ActionChains(self.driver).move_to_element(lobby_sport).click(esb_sport).perform()
-        time.sleep(12)
-        self.switch_window()
-        time.sleep(3)
-        for i in range(5):
-            self.driver.find_elements_by_css_selector('.eachItem_gamelist')[i+1].click()
+        check_is_maintain = self.detect_maintain()
+        if not check_is_maintain:
+            time.sleep(12)
+            self.switch_window()
             time.sleep(3)
-            try:
-                if len(self.driver.find_elements_by_css_selector('.parlayAddButton')) != 0:
-                    self.driver.find_elements_by_css_selector('.parlayAddButton')[0].click()
-                else:
-                    time.sleep(1)
-                    self.driver.find_element_by_css_selector('.homeBtn_style').click()
-                    self.driver.find_elements_by_css_selector('.eachItem_gamelist')[i+4].click()
-            except:
-                pass
-            time.sleep(1)
-            self.driver.find_element_by_css_selector('.homeBtn_style').click()
+            for i in range(6):
+                self.driver.find_elements_by_css_selector('.eachItem_gamelist')[i+1].click()
+                time.sleep(3)
+                try:
+                    if len(self.driver.find_elements_by_css_selector('.parlayAddButton')) != 0:
+                        self.driver.find_elements_by_css_selector('.parlayAddButton')[0].click()
+                    else:
+                        time.sleep(1)
+                        self.driver.find_element_by_css_selector('.homeBtn_style').click()
+                        self.driver.find_elements_by_css_selector('.eachItem_gamelist')[i+4].click()
+                except:
+                    pass
+                time.sleep(1)
+                self.driver.find_element_by_css_selector('.homeBtn_style').click()
+                time.sleep(2)
             time.sleep(2)
-        time.sleep(2)
-        self.driver.find_element_by_css_selector('.float_button.parlay_button').click()
-        time.sleep(2)
-        for j in range(3):
-            if int(self.driver.find_element_by_css_selector('.market_num_pad').text.strip('+')) >= 4:
-                self.driver.find_elements_by_css_selector('.delete_icon.active')[0].click()
-                time.sleep(0.5)
-        time.sleep(2)
-        self.driver.find_element_by_css_selector('.confirmButton').click()
-        time.sleep(2)
-        self.driver.find_element_by_css_selector('#inputCombo').send_keys('5')
-        time.sleep(2)
-        self.driver.find_element_by_css_selector('.betButtonBg').click()
+            self.driver.find_element_by_css_selector('.float_button.parlay_button').click()
+            time.sleep(2)
+            # 如果清單內有超過4個會點不到確認，刪單至4個
+            for j in range(3):
+                if int(self.driver.find_element_by_css_selector('.market_num_pad').text.strip('+')) >= 4:
+                    self.driver.find_elements_by_css_selector('.delete_icon.active')[0].click()
+                    time.sleep(0.5)
+            time.sleep(2)
+            self.driver.find_element_by_css_selector('.confirmButton').click()
+            time.sleep(2)
+            self.driver.find_element_by_css_selector('#inputCombo').send_keys('5')
+            time.sleep(2)
+            self.driver.find_element_by_css_selector('.betButtonBg').click()
         time.sleep(8)
         self.close_window_buffer()
 
@@ -1815,8 +1772,9 @@ class GameHall(PortalLoginConfig):
         time.sleep(1)
         self.driver.find_elements_by_css_selector('.js-assign-submit.btn.confirm-btn')[1].click()  # 送出
         time.sleep(2)
-        for i in range(0, 10, 2):
-            self.driver.find_elements_by_css_selector('.table-normal .js-fadetoggle-content tr td:nth-child(3)')[int(f'{i}')].click()
+        for i in range(1, 22, 4):
+            # self.driver.find_elements_by_css_selector('.table-normal .js-fadetoggle-content tr td:nth-child(4) .td-r')[i].click()
+            self.driver.find_elements_by_css_selector('[data-bettype="RC"]')[i].click()
             time.sleep(0.5)
         time.sleep(3)
         self.driver.find_element_by_css_selector('#js-parlay-total').send_keys('10')
@@ -1852,11 +1810,7 @@ class GameHall(PortalLoginConfig):
         lobby_board = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[2]/a')  # "棋牌游戏"下拉式選單
         dt_board = self.driver.find_element_by_css_selector('[ng-click="toDtBoard()"]')  # DT梦想棋牌
         ActionChains(self.driver).move_to_element(lobby_board).click(dt_board).perform()
-        time.sleep(5)
-        self.switch_window()
-        self.switch_iframe()
-        time.sleep(1)
-        self.driver.find_element_by_css_selector('[title="三公"]').click()
+        self.into_game_lobby_setting('三公')
         time.sleep(12)
         self.switch_window()
         self.switch_iframe()
@@ -1872,11 +1826,7 @@ class GameHall(PortalLoginConfig):
         lobby_board = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[2]/a')  # "棋牌游戏"下拉式選單
         th_board = self.driver.find_element_by_css_selector('[ng-click="toThBoard()"]')  # TH天豪棋牌
         ActionChains(self.driver).move_to_element(lobby_board).click(th_board).perform()
-        time.sleep(5)
-        self.switch_window()
-        self.switch_iframe()
-        time.sleep(1)
-        self.driver.find_element_by_css_selector('[title="通比梭哈"]').click()
+        self.into_game_lobby_setting('通比梭哈')
         time.sleep(12)
         self.switch_window()
         time.sleep(1)
@@ -1893,11 +1843,7 @@ class GameHall(PortalLoginConfig):
         lobby_board = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[2]/a')  # "棋牌游戏"下拉式選單
         th_board = self.driver.find_element_by_css_selector('[ng-click="toFsBoard()"]')  # 乐游棋牌
         ActionChains(self.driver).move_to_element(lobby_board).click(th_board).perform()
-        time.sleep(5)
-        self.switch_window()
-        self.switch_iframe()
-        time.sleep(1)
-        self.driver.find_element_by_css_selector('[title="骰宝"]').click()
+        self.into_game_lobby_setting('骰宝')
         time.sleep(12)
         self.switch_window()
         time.sleep(1)
@@ -1914,11 +1860,7 @@ class GameHall(PortalLoginConfig):
         lobby_board = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[2]/a')  # "棋牌游戏"下拉式選單
         jdb_board = self.driver.find_element_by_css_selector('[ng-click="toJdbBoard()"]')  # 乐游棋牌
         ActionChains(self.driver).move_to_element(lobby_board).click(jdb_board).perform()
-        time.sleep(5)
-        self.switch_window()
-        self.switch_iframe()
-        time.sleep(1)
-        self.driver.find_element_by_css_selector('[title="JDB通比牛牛"]').click()
+        self.into_game_lobby_setting('JDB通比牛牛')
         time.sleep(13)
         self.switch_window()
         self.switch_iframe()
@@ -1931,11 +1873,7 @@ class GameHall(PortalLoginConfig):
         lobby_board = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[2]/a')  # "棋牌游戏"下拉式選單
         kg_board = self.driver.find_element_by_css_selector('[ng-click="toKgHtml()"]')  # KG开元棋牌
         ActionChains(self.driver).move_to_element(lobby_board).click(kg_board).perform()
-        time.sleep(5)
-        self.switch_window()
-        self.switch_iframe()
-        time.sleep(1)
-        self.driver.find_element_by_css_selector('[title="三公"]').click()
+        self.into_game_lobby_setting('三公')
         time.sleep(13)
         self.switch_window()
         canvas = self.driver.find_element_by_css_selector('canvas')
@@ -1949,14 +1887,10 @@ class GameHall(PortalLoginConfig):
         lobby_board = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[2]/a')  # "棋牌游戏"下拉式選單
         yg_board = self.driver.find_element_by_css_selector('[ng-click="toYgBoard()"]')  # YG云迹棋牌
         ActionChains(self.driver).move_to_element(lobby_board).click(yg_board).perform()
-        time.sleep(5)
-        self.switch_window()
-        self.switch_iframe()
-        time.sleep(1)
-        self.driver.find_element_by_css_selector('[title="抢庄三公"]').click()
+        self.into_game_lobby_setting('抢庄三公')
         time.sleep(13)
         self.switch_window()
-        self.switch_iframe()
+        # self.switch_iframe()
         canvas = self.driver.find_element_by_css_selector('#GameCanvas')
         ActionChains(self.driver).move_to_element_with_offset(canvas, 700, 300).click().perform()
         time.sleep(28)
@@ -1966,111 +1900,84 @@ class GameHall(PortalLoginConfig):
         lobby_board = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[2]/a')  # "棋牌游戏"下拉式選單
         nw_board = self.driver.find_element_by_css_selector('[ng-click="toNwBoard()"]')  # 新世界棋牌
         ActionChains(self.driver).move_to_element(lobby_board).click(nw_board).perform()
-        time.sleep(5)
-        self.switch_window()
-        self.switch_iframe()
-        time.sleep(1)
-        self.driver.find_element_by_css_selector('[title="三公"]').click()
-        time.sleep(13)
-        self.switch_window()
-        self.switch_iframe()
-        canvas = self.driver.find_element_by_css_selector('canvas')
-        ActionChains(self.driver).move_to_element_with_offset(canvas, 450, 300).click().perform()
-        time.sleep(10)
-        ActionChains(self.driver).move_by_offset(50, 480).click().perform()
-        for i in range(3):
-            ActionChains(self.driver).move_by_offset(0, 0).click().perform()
-        time.sleep(3)
-        ActionChains(self.driver).move_by_offset(-300, -50).click().perform()
-        for j in range(5):
-            ActionChains(self.driver).move_by_offset(0, 0).click().perform()
-        time.sleep(28)
+        self.into_game_lobby_setting('三公')
+        check_is_maintain = self.detect_maintain()
+        if not check_is_maintain:
+            time.sleep(13)
+            self.switch_window()
+            self.switch_iframe()
+            canvas = self.driver.find_element_by_css_selector('canvas')
+            ActionChains(self.driver).move_to_element_with_offset(canvas, 450, 300).click().perform()
+            time.sleep(10)
+            ActionChains(self.driver).move_by_offset(50, 480).click().perform()
+            for i in range(3):
+                ActionChains(self.driver).move_by_offset(0, 0).click().perform()
+            time.sleep(3)
+            ActionChains(self.driver).move_by_offset(-300, -50).click().perform()
+            for j in range(5):
+                ActionChains(self.driver).move_by_offset(0, 0).click().perform()
+            time.sleep(28)
         self.close_window_buffer()
 
     def goLEGboard(self):
         lobby_board = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[2]/a')  # "棋牌游戏"下拉式選單
         leg_board = self.driver.find_element_by_css_selector('[ng-click="toLegBoard()"]')  # LEG乐棋牌
         ActionChains(self.driver).move_to_element(lobby_board).click(leg_board).perform()
-        time.sleep(5)
-        self.switch_window()
-        self.switch_iframe()
-        time.sleep(1)
-        self.driver.find_elements_by_css_selector('#pager li')[3].click()
-        time.sleep(2)
-        self.driver.find_element_by_css_selector('[title="三公"]').click()
-        time.sleep(13)
-        self.switch_window()
-        self.switch_iframe()
-        canvas = self.driver.find_elements_by_css_selector('canvas')[1]
-        ActionChains(self.driver).move_to_element_with_offset(canvas, 450, 300).click().perform()
-        time.sleep(45)
+        self.into_game_lobby_setting('三公')
+        check_is_maintain = self.detect_maintain()
+        if not check_is_maintain:
+            time.sleep(13)
+            self.switch_window()
+            self.switch_iframe()
+            canvas = self.driver.find_elements_by_css_selector('canvas')[1]
+            ActionChains(self.driver).move_to_element_with_offset(canvas, 450, 300).click().perform()
+            time.sleep(45)
         self.close_window_buffer()
 
     def goAPboard(self):
         lobby_board = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[2]/a')  # "棋牌游戏"下拉式選單
         ap_board = self.driver.find_element_by_css_selector('[ng-click="toCity761Html()"]')  # AP爱棋牌
         ActionChains(self.driver).move_to_element(lobby_board).click(ap_board).perform()
-        time.sleep(5)
-        self.switch_window()
-        self.switch_iframe()
-        self.driver.find_element_by_css_selector('[title="炸金花"]').click()
-        time.sleep(13)
-        self.switch_window()
-        self.switch_iframe()
-        canvas = self.driver.find_element_by_css_selector('#layaContainer')
-        ActionChains(self.driver).move_to_element_with_offset(canvas, 600, 300).click().perform()
-        time.sleep(10)
-        ActionChains(self.driver).move_by_offset(-200, 440).click().perform()
-        time.sleep(6)
+        self.into_game_lobby_setting('炸金花')
+        check_is_maintain = self.detect_maintain()
+        if not check_is_maintain:
+            time.sleep(13)
+            self.switch_window()
+            self.switch_iframe()
+            canvas = self.driver.find_element_by_css_selector('#layaContainer')
+            ActionChains(self.driver).move_to_element_with_offset(canvas, 600, 300).click().perform()
+            time.sleep(10)
+            ActionChains(self.driver).move_by_offset(-200, 440).click().perform()
+            time.sleep(6)
         self.close_window_buffer()
 
     def goBSPboard(self):
-        if self.url == 'http://www.jp777.net/':
-            lobby_fish = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[5]/a')  # "电子游艺"下拉式選單
-            GPK_elgame = self.driver.find_element_by_css_selector('[ng-click="toGpkSlot()"]')  # GPK电子游艺
-            ActionChains(self.driver).move_to_element(lobby_fish).click(GPK_elgame).perform()
-            time.sleep(5)
+        lobby_board = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[2]/a')  # "棋牌游戏"下拉式選單
+        bsp_board = self.driver.find_element_by_css_selector('[ng-click="toBspBoard()"]')  # BSP百胜棋牌
+        ActionChains(self.driver).move_to_element(lobby_board).click(bsp_board).perform()
+        self.into_game_lobby_setting('三公')
+        check_is_maintain = self.detect_maintain()
+        if not check_is_maintain:
+            time.sleep(12)
             self.switch_window()
-            time.sleep(1)
-            lobby_sport = self.driver.find_element_by_css_selector('.lobbyNav-pager')  # 導航
-            ActionChains(self.driver).move_to_element(lobby_sport).click().perform()
-            self.driver.find_elements_by_css_selector('.lobbyNav-category [ng-repeat="nav in navInfoList"]')[
-                4].click()  # 棋牌
-            time.sleep(2)
-            bsp_board = self.driver.find_element_by_css_selector('[game-box="BspBoard"]')  # BSP百胜棋牌
-            ActionChains(self.driver).move_to_element(bsp_board).click().perform()
-            time.sleep(10)
-        else :
-            lobby_board = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[2]/a')  # "棋牌游戏"下拉式選單
-            ap_board = self.driver.find_element_by_css_selector('[ng-click="toCity761Html()"]')  # BSP百胜棋牌
-            ActionChains(self.driver).move_to_element(lobby_board).click(ap_board).perform()
+            self.switch_iframe()
+            # self.driver.find_element_by_css_selector('.btn.btn-close.close-pop-message').click()
+            time.sleep(3)
+            self.switch_iframe()
+            canvas = self.driver.find_element_by_css_selector('canvas')
+            ActionChains(self.driver).move_to_element_with_offset(canvas, 700, 350).click().perform()
+            time.sleep(6)
+            ActionChains(self.driver).move_by_offset(-250, 70).click().perform()
             time.sleep(5)
-        self.switch_window()
-        self.switch_iframe()
-        self.driver.find_element_by_css_selector('[title="三公"]').click()
-        time.sleep(12)
-        self.switch_window()
-        self.switch_iframe()
-        self.driver.find_element_by_css_selector('.btn.btn-close.close-pop-message').click()
-        time.sleep(3)
-        self.switch_iframe()
-        canvas = self.driver.find_element_by_css_selector('canvas')
-        ActionChains(self.driver).move_to_element_with_offset(canvas, 700, 350).click().perform()
-        time.sleep(6)
-        ActionChains(self.driver).move_by_offset(-250, 70).click().perform()
-        time.sleep(5)
-        ActionChains(self.driver).move_by_offset(200, 60).click().perform()
-        time.sleep(10)
+            ActionChains(self.driver).move_by_offset(200, 60).click().perform()
+            time.sleep(10)
         self.close_window_buffer()
 
     def goJSboard(self):
         lobby_board = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[2]/a')  # "棋牌游戏"下拉式選單
         leg_board = self.driver.find_element_by_css_selector('[ng-click="toJsBoard()"]')  # JS金龙棋牌
         ActionChains(self.driver).move_to_element(lobby_board).click(leg_board).perform()
-        time.sleep(5)
-        self.switch_window()
-        self.switch_iframe()
-        self.driver.find_element_by_css_selector('[title="炸金花"]').click()
+        self.into_game_lobby_setting('炸金花')
         time.sleep(13)
         try:
             canvas = self.driver.find_element_by_id('GameCanvas')
@@ -2088,8 +1995,6 @@ class GameHall(PortalLoginConfig):
             time.sleep(10)
         except:
             pass
-
-
         self.switch_window()
         self.switch_iframe()
         canvas = self.driver.find_elements_by_css_selector('canvas')[1]

@@ -13,7 +13,7 @@ class PortalLoginTest(unittest.TestCase):
         AB006 = 'http://www.rfben.com/'
         AB007 = 'http://www.jp777.net/'
 
-        url = AB005
+        url = AB006
 
         options = webdriver.ChromeOptions()
         options.add_argument('--ignore-certificate-errors')
@@ -40,23 +40,23 @@ class PortalLoginTest(unittest.TestCase):
         開啟遊戲1秒後關閉取0~1個
         """
 
-        all_list = []
-        user_times = random.randint(0, 2)
-        user_randomlist = random.sample(usersimulation_list, user_times)
-
-        game_times = random.randint(2, 3)
-        game_randomlist = random.sample(game_list, game_times)
-
-        entergame_times = random.randint(1, 2)
-        entergame_randomlist = random.sample(entergame_list, entergame_times)
-
-        all_list.extend(user_randomlist)
-        all_list.extend(game_randomlist)
-        all_list.extend(entergame_randomlist)
-        random.shuffle(all_list)
-        print('random all_list:', all_list)
-        for action in all_list:
-            eval(action)
+        # all_list = []
+        # user_times = random.randint(0, 2)
+        # user_randomlist = random.sample(usersimulation_list, user_times)
+        #
+        # game_times = random.randint(2, 3)
+        # game_randomlist = random.sample(game_list, game_times)
+        #
+        # entergame_times = random.randint(1, 2)
+        # entergame_randomlist = random.sample(entergame_list, entergame_times)
+        #
+        # all_list.extend(user_randomlist)
+        # all_list.extend(game_randomlist)
+        # all_list.extend(entergame_randomlist)
+        # random.shuffle(all_list)
+        # print('random all_list:', all_list)
+        # for action in all_list:
+        #     eval(action)
 
     def test_captcha_pass(self):
         # for index in range(len(member)):
@@ -95,18 +95,18 @@ class PortalLoginTest(unittest.TestCase):
         # 體育(串關定位要研究) 0622test
         # self.game.goSABAsport()
         # self.game.goIMsport()
-        # self.game.goESBsport()
+        # self.game.goESBsport()  #
         # self.game.go3singsport()
         # self.game.goCRsport()
-        # self.game.goBBINsport()
+        # self.game.goBBINsport() #
 
 
         # 牌類 0622test
         # self.game.goJDBboard()
         # self.game.goDTboard()
         # self.game.goKGboard()
-        # self.game.goYGboard()
-        # self.game.goNWboard()
+        # self.game.goYGboard() #
+        # self.game.goNWboard() #
         # self.game.goLEGboard()
         # self.game.goAPboard()
         # self.game.goBSPboard()
@@ -114,49 +114,49 @@ class PortalLoginTest(unittest.TestCase):
         # self.game.goJSboard() # 06不要跑
 
         # 別種定位 , 複雜定位  目前解決不了
-        # self.game.goFBGelgame()  # 待修
+
 
         # 電子 - 確認ok 0622test
         # 05.06.07都可以
-
+        # self.game.goFBGelgame() # 06遊戲不同
         # self.game.goTOGelgame()
         # self.game.goSWelgame()
         # self.game.goAEelgame()
         # self.game.goSYelgame()
-        # self.game.goPTelgame()
         # self.game.goSGelgame()
         # self.game.goPPelgame()
-        self.game.goICGelgame()
-        self.game.goBSPelgame()
-        self.game.goGPKelgame()
-        self.game.goJDBelgame()
-        self.game.goHBelgame()
-        self.game.goDTelgame()
-        self.game.goPNGelgame()
-        self.game.goPGelgame()  #PG, PG2不同
-        self.game.goGPK2elgame()
-        self.game.goKAelgame()
-        self.game.goMWelgame()
-        self.game.goJSelgame()
+        # self.game.goICGelgame()
+        # self.game.goBSPelgame()
+        # self.game.goGPKelgame()
+        # self.game.goJDBelgame()
+        # self.game.goHBelgame()
+        # self.game.goDTelgame()
+        # self.game.goPNGelgame()
+        # self.game.goPGelgame()  #PG, PG2不同 #
+        # self.game.goGPK2elgame()
+        # self.game.goKAelgame()
+        # self.game.goMWelgame()
+        # self.game.goJSelgame()
+        # self.game.goRTelgame()
+        # self.game.goPTelgame()  #
+        # self.game.goGHelgame()  # 06換遊戲了
+        # self.game.goR8elgame()  # 06換遊戲了
 
-        self.game.goGHelgame()  # 06換遊戲了
-        self.game.goR8elgame()  # 06換遊戲了
-
-        # self.game.goMTelgame()  # 改掛VPN
         # self.game.goFGargame()  # FG街機維修很久了
+        # self.game.goMTelgame()  # 改掛VPN
 
         # 捕魚 - 確認ok 0624test
-        # self.game.goKAfish()
-        # self.game.goICGfish()
-        # self.game.goAPfish()
-        # self.game.goFGfish()
-        # self.game.goJDBfish()
-        # self.game.goLEGfish()
-        # self.game.goVGfish()
-        # self.game.goGPK2fish()
-        # self.game.goFGbird()
-        # self.game.goGPKfish()
-        # self.game.goBSPfish()
+        self.game.goKAfish()
+        self.game.goICGfish()
+        self.game.goAPfish()
+        self.game.goFGfish()
+        self.game.goJDBfish()
+        self.game.goLEGfish()
+        self.game.goVGfish()
+        self.game.goGPK2fish()
+        self.game.goFGbird()
+        self.game.goGPKfish()
+        self.game.goBSPfish()
         self.game.goMWfish()
 
         # self.game.goBBINfish()  # 待修 要兌換分數 麻煩
