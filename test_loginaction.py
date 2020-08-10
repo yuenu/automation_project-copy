@@ -13,7 +13,7 @@ class PortalLoginTest(unittest.TestCase):
         AB006 = 'http://www.rfben.com/'
         AB007 = 'http://www.jp777.net/'
 
-        url = AB006
+        url = AB005
 
         options = webdriver.ChromeOptions()
         options.add_argument('--ignore-certificate-errors')
@@ -122,7 +122,7 @@ class PortalLoginTest(unittest.TestCase):
         # self.game.goTOGelgame()
         # self.game.goSWelgame()
         # self.game.goAEelgame()
-        # self.game.goSYelgame()
+        # self.game.goSYelgame() #
         # self.game.goSGelgame()
         # self.game.goPPelgame()
         # self.game.goICGelgame()
@@ -132,19 +132,19 @@ class PortalLoginTest(unittest.TestCase):
         # self.game.goHBelgame()
         # self.game.goDTelgame()
         # self.game.goPNGelgame()
-        # self.game.goPGelgame()  #PG, PG2不同 #
+
         # self.game.goGPK2elgame()
         # self.game.goKAelgame()
         # self.game.goMWelgame()
         # self.game.goJSelgame()
-        # self.game.goRTelgame()
-        # self.game.goPTelgame()  #
-        # self.game.goGHelgame()  # 06換遊戲了
-        # self.game.goR8elgame()  # 06換遊戲了
+        self.game.goRTelgame() #
+        self.game.goPTelgame()  #
+        self.game.goGHelgame()  # 06換遊戲了
+        self.game.goR8elgame()  # 06換遊戲了
 
         # self.game.goFGargame()  # FG街機維修很久了
         # self.game.goMTelgame()  # 改掛VPN
-
+        # self.game.goPGelgame()  #PG, PG2不同 #
         # 捕魚 - 確認ok 0624test
         self.game.goKAfish()
         self.game.goICGfish()

@@ -665,8 +665,9 @@ class GameHall(PortalLoginConfig):
             ActionChains(self.driver).move_by_offset(0, 0).click().perform()
             time.sleep(4)
         time.sleep(8)
-        self.driver.close()
-        self.switch_window()
+        if self.url == 'http://www.rfben.com/':
+            self.driver.close()
+            self.switch_window()
         self.close_window_buffer()
 
     def goSWelgame(self):
@@ -896,8 +897,8 @@ class GameHall(PortalLoginConfig):
     '''卡在是否關掉聲音那關，用ActionChain沒有反應'''
     def goFBGelgame(self):
         lobby_elgame = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[5]/a')  # "电子游艺"下拉式選單
-        FBG_elgame = self.driver.find_element_by_css_selector('[ng-click="toJv8Html()"]')  # FBG发宝电子游艺
-        ActionChains(self.driver).move_to_element(lobby_elgame).click(FBG_elgame).perform()
+        fbg_slot_game = self.driver.find_element_by_css_selector('[ng-click="toJv8Html()"]')  # FBG发宝电子游艺
+        ActionChains(self.driver).move_to_element(lobby_elgame).click(fbg_slot_game).perform()
         self.into_game_lobby_setting('松鼠战士')
         check_is_maintain = self.detect_maintain()
         if not check_is_maintain:
@@ -930,21 +931,9 @@ class GameHall(PortalLoginConfig):
 
     def goJDBelgame(self):
         lobby_elgame = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[5]/a')  # "电子游艺"下拉式選單
-        JDB_elgame = self.driver.find_element_by_css_selector('[ng-click="toJdbHtml()"]')  # 夺宝电子游艺
-        ActionChains(self.driver).move_to_element(lobby_elgame).click(JDB_elgame).perform()
+        jdb_slot_game = self.driver.find_element_by_css_selector('[ng-click="toJdbHtml()"]')  # 夺宝电子游艺
+        ActionChains(self.driver).move_to_element(lobby_elgame).click(jdb_slot_game).perform()
         self.into_game_lobby_setting('芝麻开门')
-        # time.sleep(5)
-        # self.switch_window()
-        # self.switch_iframe()
-        # time.sleep(1)
-        # if len(self.driver.find_elements_by_css_selector('[title="芝麻开门"]')) != 0:
-        #     self.driver.find_element_by_css_selector('[title="芝麻开门"]').click()
-        # elif len(self.driver.find_elements_by_css_selector('[title="芝麻开门"]')) == 0:
-        #     self.driver.find_element_by_css_selector('[ng-click="changePage(page.index+1)"]').click()
-        #     time.sleep(1)
-        #     self.driver.find_element_by_css_selector('[title="芝麻开门"]').click()
-        # else :
-        #     print('JDB電子大廳顯示有問題')
         time.sleep(10)
         self.switch_window()
         self.switch_iframe()
@@ -959,8 +948,8 @@ class GameHall(PortalLoginConfig):
 
     def goHBelgame(self):
         lobby_elgame = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[5]/a')  # "电子游艺"下拉式選單
-        HB_elgame = self.driver.find_element_by_css_selector('[ng-click="toHabaHtml()"]')  # HB电子游艺
-        ActionChains(self.driver).move_to_element(lobby_elgame).click(HB_elgame).perform()
+        hb_slot_game = self.driver.find_element_by_css_selector('[ng-click="toHabaHtml()"]')  # HB电子游艺
+        ActionChains(self.driver).move_to_element(lobby_elgame).click(hb_slot_game).perform()
         self.into_game_lobby_setting('鲤鱼门')
         time.sleep(12)
         self.switch_window()
@@ -973,8 +962,8 @@ class GameHall(PortalLoginConfig):
 
     def goSYelgame(self):
         lobby_elgame = self.driver.find_element_by_xpath('//*[@id="nav"]/ul/li[5]/a')  # "电子游艺"下拉式選單
-        SY_elgame = self.driver.find_element_by_css_selector('[ng-click="toIm2Html()"]')  # SY双赢电子游艺
-        ActionChains(self.driver).move_to_element(lobby_elgame).click(SY_elgame).perform()
+        sy_slot_game = self.driver.find_element_by_css_selector('[ng-click="toIm2Html()"]')  # SY双赢电子游艺
+        ActionChains(self.driver).move_to_element(lobby_elgame).click(sy_slot_game).perform()
         self.into_game_lobby_setting('银行大劫案')
         time.sleep(20)
         self.switch_window()
